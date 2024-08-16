@@ -1,5 +1,6 @@
 import requests
 from litellm import LiteLLM
+import os
 
 def download_audio(url, filename):
     """Downloads the audio file from the given URL and saves it to the specified filename."""
@@ -20,7 +21,7 @@ def transcribe_audio(filename):
 def main():
     """Main function to download, transcribe, and save the transcript."""
     url = input("Enter the URL of the audio file: ")
-    filename = "audio.wav"  # You can change this to a different filename
+    filename = os.path.basename(url)  # Extract filename from URL
     download_audio(url, filename)
     transcript = transcribe_audio(filename)
     print("Transcript segments:")
