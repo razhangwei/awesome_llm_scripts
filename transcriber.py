@@ -34,7 +34,7 @@ def compress_audio(filename, target_size_mb=25):
         compressed_audio = audio.set_frame_rate(int(audio.frame_rate * compression_ratio))
         extension = filename.split(".")[-1]
         compressed_audio.export(filename, format=extension)
-        print(f"Audio file compressed to {target_size_mb} MB.")
+        logging.info(f"Audio file compressed to {target_size_mb} MB.")
 
 def main():
     """Main function to download, transcribe, and save the transcript."""
@@ -47,12 +47,12 @@ def main():
     download_audio(args.audio_url, filename)
     compress_audio(filename)  # Compress if needed
     transcript = transcribe_audio(filename, args.model)
-    print("Transcript segments:")
+    logging.info("Transcript segments:")
     for segment in transcript.segments:
-        print(f"Start: {segment.start}, End: {segment.end}, Text: {segment.text}")
+        logging.info(f"Start: {segment.start}, End: {segment.end}, Text: {segment.text}")
     with open("transcript.txt", "w") as f:
         f.write(transcript.text)
-    print("Transcript saved to transcript.txt")
+    logging.info("Transcript saved to transcript.txt")
 
 if __name__ == "__main__":
     main()
