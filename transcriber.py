@@ -3,14 +3,19 @@ from litellm import LiteLLM
 import os
 from pydub import AudioSegment
 import argparse
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def download_audio(url, filename):
     """Downloads the audio file from the given URL and saves it to the specified filename."""
+    logging.info(f"Downloading audio from {url} to {filename}")
     response = requests.get(url, stream=True)
     response.raise_for_status()  # Raise an exception for bad status codes
     with open(filename, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
+    logging.info(f"Audio downloaded successfully.")
 
 def transcribe_audio(filename, model_name):
     """Transcribes the audio file using the specified model via LiteLLM."""
