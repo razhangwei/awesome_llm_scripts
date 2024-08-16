@@ -17,12 +17,17 @@ def download_audio(url, filename):
             f.write(chunk)
     logging.info(f"Audio downloaded successfully.")
 
-def transcribe_audio(filename, model_name):
+def transcribe_audio(filename, model):
     """Transcribes the audio file using the specified model via LiteLLM."""
-    model = LiteLLM(model_name)
     with open(filename, 'rb') as f:
         audio_data = f.read()
-    transcript = model.transcribe(audio_data)
+    transcript = litellm.transcription(
+        model=model,
+        file=audio_data,
+        temperature=0,
+        langfuse="en",
+        response_format="verbose_json",
+    )
     return transcript
 
 def compress_audio(filename, target_size_mb=25):
