@@ -27,7 +27,9 @@ def compress_audio(filename, target_size_mb=25):
     if file_size_mb > target_size_mb:
         compression_ratio = target_size_mb / file_size_mb
         compressed_audio = audio.set_frame_rate(int(audio.frame_rate * compression_ratio))
-        compressed_audio.export(filename, format=audio.file_ext.replace('.', ''))
+        format = compressed_audio.get_format()  # Get the file format
+        extension = format.split('.')[-1]  # Extract the extension
+        compressed_audio.export(filename, format=extension)
         print(f"Audio file compressed to {target_size_mb} MB.")
 
 def main():
