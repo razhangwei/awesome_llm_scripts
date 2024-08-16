@@ -1,9 +1,13 @@
 import requests
-from litellm import LiteLLM
+import litellm 
 import os
 from pydub import AudioSegment
 import argparse
 import logging
+
+## set ENV variables
+os.environ["GROQ_API_KEY"] = "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"
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,14 +24,14 @@ def download_audio(url, filename):
 def transcribe_audio(filename, model):
     """Transcribes the audio file using the specified model via LiteLLM."""
     with open(filename, 'rb') as f:
-        audio_data = f.read()
-    transcript = litellm.transcription(
-        model=model,
-        file=audio_data,
-        temperature=0,
-        langfuse="en",
-        response_format="verbose_json",
-    )
+        transcript = litellm.transcription(
+            model=model,
+            file=f,
+            temperature=0,
+            langfuse="en",
+            response_format="verbose_json",
+        )
+
     return transcript
 
 def compress_audio(filename, target_size_mb=25):
