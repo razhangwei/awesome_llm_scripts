@@ -1,0 +1,3 @@
+litellm
+pydub
+mlx_whisper
