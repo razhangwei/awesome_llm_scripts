@@ -1,0 +1,13 @@
+- Infer the guests' names. 
+- Can slightly polish the sentences to aid readability.
+- Infer
+- Format: (assume the guest name is Eric)
+```
+Host: hello world
+
+Eric: hello world
+
+Host: hi
+
+...
+```
