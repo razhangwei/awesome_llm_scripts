@@ -50,7 +50,7 @@ def transcribe_audio(filename: str, model: str) -> list[dict]:
             verbose=False, 
         )
         logging.info(f"Transcription complete. Returned {len(result['segments'])} segments.")
-        return result["segments"]
+        return result["segments"] 
     else:
         with open(filename, "rb") as f:
             logging.info(f"Transcribing {filename} using LiteLLM")
