@@ -2,7 +2,7 @@ import requests
 import litellm
 import os
 from pydub import AudioSegment
-import argparse
+import click
 import logging
 import json
 import mlx_whisper 
@@ -85,27 +85,26 @@ def compress_audio(filename: str, target_size_mb: int = 25) -> None:
         logging.info(f"Audio file compressed to {target_size_mb} MB.")
 
 
-def main() -> None:
+
+
+@click.command()
+@click.argument("audio_url", type=str)
+@click.option(
+    "-m",
+    "--model",
+    default="mlx-community/distil-whisper-large-v3",
+    help="Name of the model to use (default: mlx-community/distil-whisper-large-v3). "
+         "MLX models will be run locally",
+)
+def main(audio_url: str, model: str) -> None:
     """
     Main function to download, transcribe, and save the transcript.
     """
-    parser = argparse.ArgumentParser(
-        description="Transcribe audio files using LiteLLM."
-    )
-    parser.add_argument("audio_url", help="URL of the audio file")
-    parser.add_argument(
-        "-m",
-        "--model",
-        default="mlx-community/distil-whisper-large-v3",
-        help="Name of the model to use (default: mlx-community/distil-whisper-large-v3). "
-        "MLX models will be run locally",
-    )
-    args = parser.parse_args()
 
-    filename = os.path.basename(args.audio_url)  # Extract filename from URL
-    download_audio(args.audio_url, filename)
+    filename = "data/" + os.path.basename(audio_url)  # Extract filename from URL
+    download_audio(audio_url, filename)
     compress_audio(filename)  # Compress if needed
-    segments = transcribe_audio(filename, args.model)
+    segments = transcribe_audio(filename, model)
 
     logging.info("Transcript segments:")
     for segment in segments:
