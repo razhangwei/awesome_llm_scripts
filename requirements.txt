@@ -1,4 +1,4 @@
 litellm
 pydub
-mlx_whisper
+mlx_whisper ; sys_platform == 'darwin'
 click

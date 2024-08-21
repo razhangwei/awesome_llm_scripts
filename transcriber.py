@@ -5,8 +5,7 @@ from pydub import AudioSegment
 import click
 import logging
 import json
-import mlx_whisper 
-
+from platform import system  
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -43,7 +42,10 @@ def transcribe_audio(filename: str, model: str) -> list[dict]:
         A list of dictionaries containing the transcript segments.
     """
     logging.info(f"Transcribing {filename} with {model}")
+    
     if model.startswith("mlx-community/"):
+        import mlx_whisper 
+        
         result = mlx_whisper.transcribe(
             filename,
             path_or_hf_repo=model, 
@@ -93,7 +95,7 @@ def compress_audio(filename: str, target_size_mb: int = 25) -> None:
     "-m",
     "--model",
     default="mlx-community/distil-whisper-large-v3",
-    help="Name of the model to use (default: mlx-community/distil-whisper-large-v3). "
+    help="Name of the model to use (default: groq/distil-whisper-large-v3-en). "
          "MLX models will be run locally",
 )
 def main(audio_url: str, model: str) -> None:
@@ -105,6 +107,9 @@ def main(audio_url: str, model: str) -> None:
     download_audio(audio_url, filename)
     compress_audio(filename)  # Compress if needed
     segments = transcribe_audio(filename, model)
+
+    if model.startswith("mlx-community") and system() != "Darwin":  # Use system() to get the platform
+        raise ValueError("MLX models are only supported on macOS.")
 
     logging.info("Transcript segments:")
     for segment in segments:
@@ -121,5 +126,3 @@ def main(audio_url: str, model: str) -> None:
 
 if __name__ == "__main__":
     main()
-
-
